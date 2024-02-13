@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR - wxlter.dev</title>
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #text-input {
+            width: 300px;
+            padding: 8px;
+            font-size: 16px;
+        }
+
+        #generate-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+        }
+
+        #qrcode {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Generador de QR</h1>
+    <label for="text-input">Texto o enlace:</label>
+    <input type="text" id="text-input" placeholder="Ingrese el texto o enlace">
+    <button id="generate-button" onclick="generateQR()">Generar QR</button>
+    <div id="qrcode"></div>
+
+    <script>
+        function generateQR() {
+            var textInput = document.getElementById("text-input").value;
+            var qrcodeContainer = document.getElementById("qrcode");
+
+            // Limpiar contenedor previo
+            qrcodeContainer.innerHTML = "";
+
+            // Generar código QR
+            var qrcode = new QRCode(qrcodeContainer, {
+                text: textInput,
+                width: 200,
+                height: 200
+            });
+        }
+    </script>
+</body>
+</html>
