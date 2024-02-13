@@ -37,23 +37,29 @@
     <h1>Generador de QR</h1>
     <label for="text-input">Texto o enlace:</label>
     <input type="text" id="text-input" placeholder="Ingrese el texto o enlace">
-    <button id="generate-button" onclick="generateQR()">Generar QR</button>
+    <button id="generate-button" onclick="generateCustomQR()">Generar QR</button>
     <div id="qrcode"></div>
 
     <script>
-        function generateQR() {
+        function generateCustomQR() {
             var textInput = document.getElementById("text-input").value;
             var qrcodeContainer = document.getElementById("qrcode");
 
             // Limpiar contenedor previo
             qrcodeContainer.innerHTML = "";
 
-            // Generar código QR
+            // Personalizar opciones del código QR
             var qrcode = new QRCode(qrcodeContainer, {
                 text: textInput,
                 width: 200,
-                height: 200
+                height: 200,
+                colorDark: "#1a1a1a",   // Color de los módulos oscuros
+                colorLight: "#ffffff",  // Color de los módulos claros
+                logo: "wxlter.png", // Ruta al logo personalizado
+                logoWidth: 80,          // Ancho del logo
+                logoHeight: 80          // Altura del logo
             });
+
         }
     </script>
 </body>
