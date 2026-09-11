@@ -2,7 +2,7 @@
  * Minimal offline cache for QR Studio. Everything the app needs runs
  * client-side, so once the shell is cached the app works with no network.
  */
-const CACHE_NAME = 'qr-studio-v1';
+const CACHE_NAME = 'qr-studio-v2';
 const ASSETS = [
   './',
   './index.html',

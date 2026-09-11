@@ -14,28 +14,10 @@ const zlib = require('zlib');
 
 const OUT_DIR = path.join(__dirname, '..', 'icons');
 
-// Apple system blue -> indigo diagonal gradient, matching the app's accent.
-const COLOR_A = [10, 132, 255]; // #0A84FF
-const COLOR_B = [94, 92, 230]; // #5E5CE6
-
-function lerp(a, b, t) {
-  return a + (b - a) * t;
-}
-
-function roundedRectAlpha(x, y, w, h, r) {
-  // Distance-based alpha for a rounded-rect mask, 1 = fully inside, 0 = fully outside,
-  // with a 1px antialiased edge.
-  const cx = Math.min(Math.max(x, r), w - r);
-  const cy = Math.min(Math.max(y, r), h - r);
-  const dx = x - cx;
-  const dy = y - cy;
-  const dist = Math.sqrt(dx * dx + dy * dy);
-  const edge = dist - r;
-  if (x < r || x > w - r || y < r || y > h - r) {
-    return Math.max(0, Math.min(1, 0.5 - edge));
-  }
-  return 1;
-}
+// wxlter. brand: flat ink background, brand-faro glyph — no gradient, no
+// rounded corners (the OS applies its own mask on maskable/adaptive icons).
+const COLOR_INK = [17, 17, 17]; // #111111
+const COLOR_FARO = [255, 219, 0]; // #FFDB00
 
 // Draws one L-shaped viewfinder bracket in the given corner of a
 // `box`x`box` glyph area, with stroke `t` and arm length `a`.
@@ -56,28 +38,23 @@ function drawBracket(set, box, t, a, corner) {
 
 function makeIcon(size, { padded = false } = {}) {
   const buf = Buffer.alloc(size * size * 4);
-  const bg = buf; // RGBA
 
-  // Background: rounded rect with diagonal gradient, transparent outside.
-  const r = size * 0.225; // Apple-ish continuous-corner approximation
+  // Background: flat ink, full bleed (square — no rounding; the OS applies
+  // its own mask for maskable/adaptive icons, and a hard-edged square is
+  // the brand's own favicon treatment anyway).
   for (let y = 0; y < size; y++) {
     for (let x = 0; x < size; x++) {
-      const alpha = roundedRectAlpha(x, y, size, size, r);
-      const t = (x + y) / (size * 2);
-      const cr = lerp(COLOR_A[0], COLOR_B[0], t);
-      const cg = lerp(COLOR_A[1], COLOR_B[1], t);
-      const cb = lerp(COLOR_A[2], COLOR_B[2], t);
       const i = (y * size + x) * 4;
-      bg[i] = cr;
-      bg[i + 1] = cg;
-      bg[i + 2] = cb;
-      bg[i + 3] = Math.round(alpha * 255);
+      buf[i] = COLOR_INK[0];
+      buf[i + 1] = COLOR_INK[1];
+      buf[i + 2] = COLOR_INK[2];
+      buf[i + 3] = 255;
     }
   }
 
   // Foreground glyph: a viewfinder scan-frame (four corner brackets) around
-  // a center dot, inset with generous margin (Apple HIG icon safe-zone /
-  // maskable-icon padding).
+  // a center dot, in brand-faro, inset with generous margin (maskable-icon
+  // safe zone for the padded variant).
   const inset = padded ? size * 0.32 : size * 0.20;
   const glyphSize = size - inset * 2;
   const set = (px, py, w, h) => {
@@ -88,9 +65,9 @@ function makeIcon(size, { padded = false } = {}) {
     for (let y = Math.max(0, y0); y < Math.min(size, y1); y++) {
       for (let x = Math.max(0, x0); x < Math.min(size, x1); x++) {
         const i = (y * size + x) * 4;
-        buf[i] = 255;
-        buf[i + 1] = 255;
-        buf[i + 2] = 255;
+        buf[i] = COLOR_FARO[0];
+        buf[i + 1] = COLOR_FARO[1];
+        buf[i + 2] = COLOR_FARO[2];
         buf[i + 3] = 255;
       }
     }
